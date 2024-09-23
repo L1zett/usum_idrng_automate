@@ -51,7 +51,7 @@ class UsumIdrngAutomate(ImageProcPythonCommand):
             
         print(f"目標IDが見つかりました。消費作業を開始します。\n消費数: {adv}")
         self.shohi(adv)
-        print("消費が終了しました")
+        print("消費が終了しました。任意の名前を入力してゲームを開始してください。")
         
     def command_init(self):
         try:
@@ -284,8 +284,8 @@ class UsumIdrngAutomate(ImageProcPythonCommand):
             file.write(str(rng_result))
     
     def check_client_size(self):
-        if not (self._window_controller.get_client_size() == (400, 480)):
+        if not self._window_controller.get_client_size() == (400, 480):
             print("ビューワーのサイズをdot by dot x 1 に合わせてください")
-            if not (self._window_controller.get_client_size() == (400, 480)):
+            while not self._window_controller.get_client_size() == (400, 480):
                 self.wait(1)
                 self.checkIfAlive()
