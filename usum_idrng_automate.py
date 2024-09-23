@@ -1,6 +1,5 @@
 from Commands.Keys import Button, Hat
 from Commands.PythonCommandBase import ImageProcPythonCommand
-from threading import Event
 from time import perf_counter
 from enum import Enum
 from logging import getLogger, DEBUG, NullHandler
@@ -25,7 +24,6 @@ class UsumIdrngAutomate(ImageProcPythonCommand):
         self._fps = 59.8261
         self._wait_time = (230 / self._fps)
         self._cur_dir = os.path.dirname(__file__)
-        self._template = os.path.join(self._cur_dir, "templates")
         self._search_method_list = [i.value for i in SearchMethod]
         self._gender_list = [
             "男主人公1", "男主人公2", "男主人公3", "男主人公4", 
@@ -279,7 +277,7 @@ class UsumIdrngAutomate(ImageProcPythonCommand):
         return np.frombuffer(bitmap_bits, dtype=np.uint8).reshape((height, width, 4))[:, :, :3]
 
     def soft_reset(self):
-        self.press([Button.L, Button.R, Button.START], wait=1)
+        self.press([Button.L, Button.R, Button.PLUS], wait=1)
         
     def save_result(self, rng_result):
         with open(os.path.join(self._cur_dir, "result.txt"), "w", encoding="utf-8") as file:
@@ -287,4 +285,7 @@ class UsumIdrngAutomate(ImageProcPythonCommand):
     
     def check_client_size(self):
         if not (self._window_controller.get_client_size() == (400, 480)):
-            self._window_controller.forced_change_size(416, 558)
+            print("ビューワーのサイズをdot by dot x 1 に合わせてください")
+            if not (self._window_controller.get_client_size() == (400, 480)):
+                self.wait(1)
+                self.checkIfAlive()
