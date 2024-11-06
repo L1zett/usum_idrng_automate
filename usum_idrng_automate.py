@@ -65,7 +65,7 @@ class UsumIdrngAutomate(ImageProcPythonCommand):
 
         print(f"目標IDが見つかりました 消費作業を開始します \n消費数: {adv}")
         self.shohi(adv)
-        print("消費が終了しました 任意の名前を入力してゲームを開始してください")
+        print("消費作業が終了しました 任意の名前を入力してゲームを開始してください")
 
     def command_init(self):
         try:
@@ -83,7 +83,7 @@ class UsumIdrngAutomate(ImageProcPythonCommand):
                 "設定",
                 [
                     ["Radio", "検索方法", self._search_method_list, self._search_method_list[0]],
-                    ["Entry", "検索範囲", "50000"],
+                    ["Entry", "検索上限", "50000"],
                     ["Combo", "言語", self._lang_list, self._lang_list[0]],
                     ["Combo", "主人公の見た目", self._gender_list, self._gender_list[0]],
                 ],
@@ -234,6 +234,7 @@ class UsumIdrngAutomate(ImageProcPythonCommand):
                 self.press(Button.A)
                 self.press(Button.PLUS)
                 self.press(Button.A, wait=3.8)
+            self._logger.info(f"adv: {i}")
 
     def g7tid_search(self):
         for i in range(self._setting[1]):
@@ -254,8 +255,6 @@ class UsumIdrngAutomate(ImageProcPythonCommand):
         return (False, None)
 
     def read_needle(self):
-        self.check_client_size()
-
         red = np.array([0, 0, 255])
         while not image_process.is_color_detected(self.get_capture(), red):
             self.wait(0.2)
@@ -304,10 +303,3 @@ class UsumIdrngAutomate(ImageProcPythonCommand):
     def save_result(self, rng_result):
         with open(os.path.join(self._cur_dir, "result.txt"), "w", encoding="utf-8") as file:
             file.write(str(rng_result))
-
-    def check_client_size(self):
-        if not self._window_controller.get_client_size() == (400, 480):
-            print("ビューワーのサイズをdot by dot x 1 に合わせてください")
-            while not self._window_controller.get_client_size() == (400, 480):
-                self.wait(1)
-                self.checkIfAlive()

@@ -1,11 +1,16 @@
 import clr
 import os
 
+def unblock_dll(dll_path):
+    zone_identifier = f"{dll_path}:Zone.Identifier"
+    if os.path.exists(zone_identifier):
+        os.remove(zone_identifier)
 
 class SFMTWrapper:
     def __init__(self):
         current_dir = os.path.dirname(__file__)
         dll = os.path.join(current_dir, "PokemonPRNG.SFMT.dll")
+        unblock_dll(dll)
         try:
             clr.AddReference(dll)
             from PokemonPRNG.SFMT import SFMT
