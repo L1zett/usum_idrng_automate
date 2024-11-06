@@ -7,6 +7,7 @@ GetWindowTextLengthW = windll.user32.GetWindowTextLengthW
 GetWindowTextW = windll.user32.GetWindowTextW
 GetWindowRect = windll.user32.GetWindowRect
 GetClientRect = windll.user32.GetClientRect
+GetDpiForWindow = windll.user32.GetDpiForWindow
 PrintWindow = windll.user32.PrintWindow
 GetDC = windll.user32.GetDC
 CreateCompatibleDC = windll.gdi32.CreateCompatibleDC
@@ -74,7 +75,12 @@ class WindowController:
             - ビットマップデータはBGRX形式で格納されます。
             - 返されたビットマップデータは画像処理ライブラリを使ってBGRに変換するなどの処理が必要です
         """
+        dpi = GetDpiForWindow(self._hwnd)
+        
         width, height = self.get_client_size()
+
+        width = int(width * dpi / 96)
+        height = int(height * dpi / 96)
 
         hDC = GetDC(self._hwnd)
         compatibleDC = CreateCompatibleDC(hDC)
